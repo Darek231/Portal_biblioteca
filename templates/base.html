@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Portal de Biblioteca</title>
+    <title>
+        {% block titulo %}
+        {% endblock %}
+    </title>
 </head>
 <body>
 
-    <h1>Portal de Biblioteca</h1>
-
-    <a href="/">Inicio</a> |
-    <a href="/login">Login</a> |
-    <a href="/libros">Libros</a> |
-    <a href="/perfil">Perfil</a> |
-    <a href="/logout">Cerrar Sesión</a>
+    <a href="{{ url_for('inicio') }}">Inicio</a>
+    <a href="{{ url_for('login') }}">Login</a>
+    <a href="{{ url_for('libros') }}">Libros</a>
+    <a href="{{ url_for('perfil') }}">Perfil</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
 
     <hr>
 

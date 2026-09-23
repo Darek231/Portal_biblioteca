@@ -1,15 +1,33 @@
-from flask import Flask, render_template,request,make_response,url_for,sessions
+from flask import Flask,render_template,request,make_response,url_for,session,redirect
 
+app=Flask(__name__)
+app.secret_key="una_clave_secreta"
 
-app = Flask(__name__)
+usuarios={
+    "carlos":"1111",
+    "laura":"2222",
+    "diego":"3333"
+}
 
 @app.route("/")
 def inicio():
     return render_template("index.html")
 
-@app.route("/login")
+@app.route("/login",methods=["GET","POST"])
 def login():
-    return render_template("login.html")
+    error=None
+
+    if request.method=="POST":
+        usuario=request.form["usuario"]
+        password=request.form["password"]
+
+        if usuario in usuarios and usuarios[usuario]==password:
+            session["usuario"]=usuario
+            return redirect(url_for("libros"))
+        else:
+            error="Usuario o contraseña incorrectos"
+
+    return render_template("login.html",error=error)
 
 @app.route("/libros")
 def libros():
@@ -17,11 +35,15 @@ def libros():
 
 @app.route("/perfil")
 def perfil():
-    return render_template("perfil.html")
+    if "usuario" not in session:
+        return redirect(url_for("login"))
+
+    return render_template("perfil.html",usuario=session["usuario"])
 
 @app.route("/logout")
 def logout():
-    return "Sesion cerrada"
+    session.clear()
+    return redirect(url_for("login"))
 
-if __name__ == "__main__":
+if __name__=="__main__":
     app.run(debug=True)
