@@ -1,7 +1,11 @@
-{%extends "base.html"%}
-{%block titulo%} perfil {%endblock%}
+{% extends "base.html" %}
 
-{%block contenido%}
-<h1>PERFIL</h1>
+{% block titulo %}Perfil{% endblock %}
 
-{%endblock%}
+{% block contenido %}
+<h2>Perfil del usuario</h2>
+
+<p>Usuario autenticado: <strong>{{ usuario }}</strong></p>
+
+<a href="{{ url_for('logout') }}">Cerrar sesión</a>
+{% endblock %}

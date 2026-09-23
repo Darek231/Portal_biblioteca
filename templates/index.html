@@ -5,6 +5,10 @@
 {% block contenido %}
 <h1>Portal de Biblioteca</h1>
 
+{% if mensaje == "sesion_cerrada" %}
+    <p style="color: green;">Sesión cerrada correctamente.</p>
+{% endif %}
+
 {% if ultimo_usuario %}
     <p>Último usuario registrado: {{ ultimo_usuario }}.</p>
     <a href="{{ url_for('eliminar_cookie') }}">Eliminar cookie</a>

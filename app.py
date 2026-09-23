@@ -17,7 +17,9 @@ lista_libros = [
 @app.route("/")
 def inicio():
     ultimo_usuario = request.cookies.get("ultimo_usuario")
-    return render_template("index.html", ultimo_usuario=ultimo_usuario)
+    mensaje = request.args.get("mensaje")
+    return render_template("index.html", ultimo_usuario=ultimo_usuario, mensaje=mensaje)
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     error = None
@@ -43,13 +45,12 @@ def libros():
 def perfil():
     if "usuario" not in session:
         return redirect(url_for("login"))
-
-    return render_template("perfil.html",usuario=session["usuario"])
+    return render_template("perfil.html", usuario=session["usuario"])
 
 @app.route("/logout")
 def logout():
-    session.clear()
-    return redirect(url_for("login"))
+    session.pop("usuario", None)
+    return redirect(url_for("inicio", mensaje="sesion_cerrada"))
 @app.route("/eliminar-cookie")
 def eliminar_cookie():
     resp = make_response(redirect(url_for("inicio")))
