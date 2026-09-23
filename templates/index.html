@@ -1,7 +1,14 @@
-{%extends "base.html"%}
-{%block titulo%} index {%endblock%}
+{% extends "base.html" %}
 
-{%block contenido%}
-<h1>PORTAL_BIBLIOTECA</h1>
+{% block titulo %}Portal de Biblioteca{% endblock %}
 
-{%endblock%}
+{% block contenido %}
+<h1>Portal de Biblioteca</h1>
+
+{% if ultimo_usuario %}
+    <p>Último usuario registrado: {{ ultimo_usuario }}.</p>
+    <a href="{{ url_for('eliminar_cookie') }}">Eliminar cookie</a>
+{% else %}
+    <p>Bienvenido al Portal de Biblioteca.</p>
+{% endif %}
+{% endblock %}

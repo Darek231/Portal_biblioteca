@@ -8,30 +8,36 @@ usuarios={
     "laura":"2222",
     "diego":"3333"
 }
+lista_libros = [
+    {"titulo": "Python desde cero", "autor": "Juan Pérez", "disponibles": 4},
+    {"titulo": "Desarrollo Web", "autor": "María López", "disponibles": 2},
+    {"titulo": "Inteligencia Artificial", "autor": "Pedro García", "disponibles": 0}
+]
 
 @app.route("/")
 def inicio():
-    return render_template("index.html")
-
-@app.route("/login",methods=["GET","POST"])
+    ultimo_usuario = request.cookies.get("ultimo_usuario")
+    return render_template("index.html", ultimo_usuario=ultimo_usuario)
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    error=None
+    error = None
+    if request.method == "POST":
+        usuario = request.form["usuario"]
+        password = request.form["password"]
 
-    if request.method=="POST":
-        usuario=request.form["usuario"]
-        password=request.form["password"]
-
-        if usuario in usuarios and usuarios[usuario]==password:
-            session["usuario"]=usuario
-            return redirect(url_for("libros"))
+        if usuario in usuarios and usuarios[usuario] == password:
+            session["usuario"] = usuario
+            resp = make_response(redirect(url_for("libros")))
+            resp.set_cookie("ultimo_usuario", usuario)
+            return resp
         else:
-            error="Usuario o contraseña incorrectos"
+            error = "Usuario o contraseña incorrectos."
 
-    return render_template("login.html",error=error)
+    return render_template("login.html", error=error)
 
 @app.route("/libros")
 def libros():
-    return render_template("libros.html")
+    return render_template("libros.html", libros=lista_libros)
 
 @app.route("/perfil")
 def perfil():
@@ -44,6 +50,11 @@ def perfil():
 def logout():
     session.clear()
     return redirect(url_for("login"))
+@app.route("/eliminar-cookie")
+def eliminar_cookie():
+    resp = make_response(redirect(url_for("inicio")))
+    resp.delete_cookie("ultimo_usuario")
+    return resp
 
 if __name__=="__main__":
     app.run(debug=True)
